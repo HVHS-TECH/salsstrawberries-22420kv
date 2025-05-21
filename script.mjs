@@ -14,7 +14,11 @@ import { getAuth, GoogleAuthProvider, signInWithPopup }
 import { ref, set }
  from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-export { fb_initialise, fb_authenticate, fb_write };
+import { get}
+ from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+export { fb_authenticate, fb_write, fb_readRecord };
+
 const FB_GAMECONFIG = {
         apiKey: "AIzaSyCn36qBrPRutqLXCYIyzkyjMQRiYyhRC2Q",
         authDomain: "comp-2025-kyla-van-weele.firebaseapp.com",
@@ -26,34 +30,13 @@ const FB_GAMECONFIG = {
         measurementId: "G-RXDD9GFN2H"
       };
 
-starting();
+var FB_GAMEAPP = initializeApp(FB_GAMECONFIG);
+var FB_GAMEDB  = getDatabase(FB_GAMEAPP);
+console.log(FB_GAMEDB);
 
-function starting() {
-    starting = alert("Starting... \nClick OK");
-    if(starting == null) {
-        fb_initialise();
-        return(starting);
-    }
-}
-
-/***********************************/
-// fb_initialise()
-// Called by initialise firebase Button
-// Firebase - using CDN
-// Input: n/a
-// Return: n/a
-/***********************************/
-var FB_GAMEDB;
-function fb_initialise() {
-    console.log('%c fb_initialise(): ', 
-        'color: ' + COL_C + '; background-color: red'
-    );
-    const FB_GAMEAPP = initializeApp(FB_GAMECONFIG);
-    FB_GAMEDB  = getDatabase(FB_GAMEAPP);
-    console.info(FB_GAMEDB);  //DIAG
-   
-}
-
+var currentUser = null;
+var userId = null;
+var templateEmail = "";
 
 /***********************************/
 // fb_authenticate()
@@ -64,7 +47,7 @@ function fb_initialise() {
 /***********************************/
 function fb_authenticate() {
     console.log('%c fb_authenticate(): ', 
-        'color: ' + COL_C + '; background-color: blue'
+        'color: ' + COL_C + '; background-color: deepPink'
     );
 
     const AUTH = getAuth();
@@ -75,6 +58,8 @@ function fb_authenticate() {
     });
 
     signInWithPopup(AUTH, PROVIDER).then((result) => {
+        currentUser = result.user;
+        userId = currentUser.uid;
         console.log('successful login');
         //✅ Code for a successful authentication goes here
     })
@@ -95,15 +80,55 @@ function fb_authenticate() {
 /***********************************/
 function fb_write() {
     console.log('%c fb_write(): ',
-        'color: ' + COL_C + '; background-color: orange'
+        'color: ' + COL_C + '; background-color: hotPink'
     );
-var data_to_write = {Pets: 1, Plants: 5}
-    const writeRecord = ref(FB_GAMEDB, 'House/People');
-    set(writeRecord, data_to_write).then(() => {  
+
+    var name = document.getElementById("name").value;
+    var fruit = document.getElementById("favoriteFruit").value;
+    var quantity = document.getElementById("fruitQuantity").value;
+
+    const dbReference = ref(FB_GAMEDB, 'users/' + userId);
+    set(dbReference, {
+        Name: name,
+        FavoriteFruit: fruit,
+        FruitQuantity: quantity
+    }).then(() => {  
         console.log('successfull write');
         //✅ Code for a successful write goes here
     }).catch((error) => {
         console.log(error);
         //❌ Code for a write error goes here
     });
+
+}
+
+
+function fb_readRecord() {
+    console.log('%c fb_readRecord(): ',
+        'color: ' + COL_C + '; background-color: lightPink'
+    );
+
+    const dbReference= ref(FB_GAMEDB, 'users/' + userId);
+    get(dbReference).then((snapshot) => {
+        var fb_data = snapshot.val();
+        if (fb_data != null) {
+            console.log(fb_data);
+            return(fb_data);
+            //✅ Code for a successful read goes here
+        } else {
+            console.log('No record found');
+            //✅ Code for no record found goes here
+        }
+    }).catch((error) => {
+        console.log('failed read');
+        //❌ Code for a read error goes here
+    });
+}
+
+
+function email() {
+    fb_readRecord.then((fb_data) => {
+        templateEmail = `
+        <div style="background: #fff0f5; border: 1px solid #ccc; padding: 1rem; border-radius: 8px;"></div>`
+    })
 }
