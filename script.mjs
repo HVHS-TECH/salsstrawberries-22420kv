@@ -17,7 +17,7 @@ import { ref, set }
 import { get}
  from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-export { fb_authenticate, fb_write, fb_readRecord };
+export { fb_authenticate, fb_write, fb_readRecord};
 
 const FB_GAMECONFIG = {
         apiKey: "AIzaSyCn36qBrPRutqLXCYIyzkyjMQRiYyhRC2Q",
@@ -30,13 +30,14 @@ const FB_GAMECONFIG = {
         measurementId: "G-RXDD9GFN2H"
       };
 
+    
 var FB_GAMEAPP = initializeApp(FB_GAMECONFIG);
 var FB_GAMEDB  = getDatabase(FB_GAMEAPP);
 console.log(FB_GAMEDB);
 
 var currentUser = null;
 var userId = null;
-var templateEmail = "";
+var emailTemplate = "";
 
 /***********************************/
 // fb_authenticate()
@@ -108,27 +109,42 @@ function fb_readRecord() {
         'color: ' + COL_C + '; background-color: lightPink'
     );
 
-    const dbReference= ref(FB_GAMEDB, 'users/' + userId);
-    get(dbReference).then((snapshot) => {
+    const dbReference = ref(FB_GAMEDB, 'users/' + userId);
+    
+    // Return the promise from `get()` so that it can be chained in `view_email()`
+    return get(dbReference).then((snapshot) => {
         var fb_data = snapshot.val();
         if (fb_data != null) {
             console.log(fb_data);
-            return(fb_data);
-            //✅ Code for a successful read goes here
+             emailTemplate = `
+                <div style="background: #fff0f5; border: 1px solid #ccc; padding: 1rem; border-radius: 8px;">
+                    <p>Welcome to Sal's Strawberry Saloon ${fb_data.Name},</p>
+                    <p>You're favorite fruit is ${fb_data.FavoriteFruit} and you normally have it ${fb_data.FruitQuantity}x a week.</p>
+                </div>`
+                document.getElementById("emailOutput").innerHTML = emailTemplate;
         } else {
             console.log('No record found');
-            //✅ Code for no record found goes here
+            return null; // Return null if no data is found
         }
     }).catch((error) => {
         console.log('failed read');
-        //❌ Code for a read error goes here
+        throw error; // Rethrow the error to propagate it
     });
 }
 
-
-function email() {
-    fb_readRecord.then((fb_data) => {
-        templateEmail = `
-        <div style="background: #fff0f5; border: 1px solid #ccc; padding: 1rem; border-radius: 8px;"></div>`
-    })
+/*
+function view_email() {
+    if(!currentUser) {
+        alert("Must be loggen in to access email");
+    }
+    else{
+        fb_readRecord().then((fb_data) => {
+           
+            document.getElementById("emailOutput").innerHTML = emailTemplate;
+        }).catch((error) => {
+            console.log('error');
+        });
+    }
 }
+*/
+
