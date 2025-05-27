@@ -120,6 +120,7 @@ function fb_readRecord() {
                 <div style="background: #fff0f5; border: 1px solid #ccc; padding: 1rem; border-radius: 8px;">
                     <p>Welcome to Sal's Strawberry Saloon ${fb_data.Name},</p>
                     <p>You're favorite fruit is ${fb_data.FavoriteFruit} and you normally have it ${fb_data.FruitQuantity}x a week.</p>
+                    <p>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</p>
                 </div>`
                 document.getElementById("emailOutput").innerHTML = emailTemplate;
         } else {
