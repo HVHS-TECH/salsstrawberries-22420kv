@@ -35,9 +35,16 @@ var FB_GAMEAPP = initializeApp(FB_GAMECONFIG);
 var FB_GAMEDB  = getDatabase(FB_GAMEAPP);
 console.log(FB_GAMEDB);
 
+
 var currentUser = null;
 var userId = null;
 var emailTemplate = "";
+var statusTemplate = "";
+
+
+function status () {
+    console.log('status working..');
+}
 
 /***********************************/
 // fb_authenticate()
@@ -51,25 +58,48 @@ function fb_authenticate() {
         'color: ' + COL_C + '; background-color: deepPink'
     );
 
+    status();
+
     const AUTH = getAuth();
     const PROVIDER = new GoogleAuthProvider();
+    if (status, fb_authenticate) {
+            console.log('user loggen in');
+            statusTemplate = `
+            <div> 
+               <p> logging in...</p>
+            </div>`
+            document.getElementById("statusMessage").innerHTML = statusTemplate;
+        } else {
+            console.log('user not loggen in');
+            return null;
+        }
+    console.log('logging in...');
     // The following makes Google ask the user to select the account
     PROVIDER.setCustomParameters({
         prompt: 'select_account'
     });
+    
 
     signInWithPopup(AUTH, PROVIDER).then((result) => {
         currentUser = result.user;
         userId = currentUser.uid;
         console.log('successful login');
         //✅ Code for a successful authentication goes here
-    })
 
-    .catch((error) => {
-        console.log('failed login');
-        //❌ Code for an authentication error goes here
-    });
-}
+        if (status, fb_authenticate) {
+            console.log('user loggen in');
+            statusTemplate = `
+            <div> 
+               <p> Thank you for loggin in! You may proceed.</p>
+            </div>`
+            document.getElementById("statusMessage").innerHTML = statusTemplate;
+        } else {
+            console.log('user not loggen in');
+            return null;
+        }
+    
+    })
+    }
 
 
 /***********************************/
@@ -83,6 +113,11 @@ function fb_write() {
     console.log('%c fb_write(): ',
         'color: ' + COL_C + '; background-color: hotPink'
     );
+
+    if (!currentUser) {
+        alert("You must be logged in to proceed!");
+        return;
+    }
 
     var name = document.getElementById("name").value;
     var fruit = document.getElementById("favoriteFruit").value;
@@ -100,6 +135,7 @@ function fb_write() {
         console.log(error);
         //❌ Code for a write error goes here
     });
+ 
 
 }
 
@@ -118,9 +154,12 @@ function fb_readRecord() {
             console.log(fb_data);
              emailTemplate = `
                 <div style="background: #fff0f5; border: 1px solid #ccc; padding: 1rem; border-radius: 8px;">
-                    <p>Welcome to Sal's Strawberry Saloon ${fb_data.Name},</p>
-                    <p>You're favorite fruit is ${fb_data.FavoriteFruit} and you normally have it ${fb_data.FruitQuantity}x a week.</p>
-                    <p>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA</p>
+                    <p>Kia ora ${fb_data.Name},</p>
+                    <p>Thank you for joining us at Sal’s Strawberry Saloon (and other fruit products)! We're thrilled to have you as a customer!</p>
+                    <p>Based on your preferences, we’ll be sending you personalized recommendations for tasty and healthy treats made with the freshest fruit — especially those ${fb_data.FavoriteFruit} we heard you love!</p>
+                    <p>At the moment, we want to offer you a deal to get fresh ${fb_data.FavoriteFruit} ${fb_data.FruitQuantity}x a week!!</p>
+                    <p>Ngā mihi nui,</p>
+                    <p><em>The Sal’s Strawberry Saloon Team</em></p>
                 </div>`
                 document.getElementById("emailOutput").innerHTML = emailTemplate;
         } else {
@@ -133,19 +172,16 @@ function fb_readRecord() {
     });
 }
 
-/*
-function view_email() {
-    if(!currentUser) {
-        alert("Must be loggen in to access email");
-    }
-    else{
-        fb_readRecord().then((fb_data) => {
-           
-            document.getElementById("emailOutput").innerHTML = emailTemplate;
-        }).catch((error) => {
-            console.log('error');
-        });
-    }
-}
-*/
-
+//function status() {
+//    if (status, fb_authenticate) {
+//        console.log('worked');
+//         statusTemplate = `
+//         <div> 
+//            <p> You have been loggen in</p>
+//         </div>`
+//         document.getElementById("statusMessage").innerHTML = statusTemplate;
+//    } else {
+//        console.log('user not loggen in');
+//        return null;
+//    }
+//}
