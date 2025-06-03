@@ -117,7 +117,15 @@ function fb_write() {
     if (!currentUser) {
         alert("You must be logged in to proceed!");
         return;
-    }
+    } else {
+        statusTemplate = `
+            <div> 
+               <p> Submitted! </p>
+            </div>`
+            document.getElementById("statusMessage").innerHTML = statusTemplate;
+    } 
+
+    
 
     var name = document.getElementById("name").value;
     var fruit = document.getElementById("favoriteFruit").value;
