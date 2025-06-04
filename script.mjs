@@ -63,7 +63,7 @@ function fb_authenticate() {
     const AUTH = getAuth();
     const PROVIDER = new GoogleAuthProvider();
     if (status, fb_authenticate) {
-            console.log('user loggen in');
+            console.log('user logging in');
             statusTemplate = `
             <div> 
                <p> logging in...</p>
@@ -99,7 +99,9 @@ function fb_authenticate() {
         }
     
     })
-    }
+
+    
+}
 
 
 /***********************************/
@@ -121,11 +123,11 @@ function fb_write() {
         statusTemplate = `
             <div> 
                <p> Submitted! </p>
-            </div>`
+            </div>
+            <span class="notification-badge">1</span`
             document.getElementById("statusMessage").innerHTML = statusTemplate;
     } 
 
-    
 
     var name = document.getElementById("name").value;
     var fruit = document.getElementById("favoriteFruit").value;
