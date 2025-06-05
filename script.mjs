@@ -182,16 +182,3 @@ function fb_readRecord() {
     });
 }
 
-//function status() {
-//    if (status, fb_authenticate) {
-//        console.log('worked');
-//         statusTemplate = `
-//         <div> 
-//            <p> You have been loggen in</p>
-//         </div>`
-//         document.getElementById("statusMessage").innerHTML = statusTemplate;
-//    } else {
-//        console.log('user not loggen in');
-//        return null;
-//    }
-//}
