@@ -123,11 +123,13 @@ function fb_write() {
         statusTemplate = `
             <div> 
                <p> Submitted! </p>
-            </div>
-            <span class="notification-badge">1</span`
+            </div>`
             document.getElementById("statusMessage").innerHTML = statusTemplate;
     } 
 
+    if (!currentUser, fb_write) {
+        badge.show();
+    }
 
     var name = document.getElementById("name").value;
     var fruit = document.getElementById("favoriteFruit").value;

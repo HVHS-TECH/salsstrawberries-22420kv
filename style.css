@@ -84,3 +84,7 @@ button:hover {
   justify-content: center;
   align-items: center;
 }
+
+#badge {
+  display:none;
+}
